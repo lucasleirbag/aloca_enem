@@ -661,3 +661,9 @@ body{
     width: 100%;
     table-layout: fixed;
 }
+
+.signature {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;  /* Optional: you can set padding */
+}
