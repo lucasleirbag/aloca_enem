@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Alocação | ENEM23</title>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <img src="images/cebraspe.ico" alt="CEBRASPE Logo" />
+            <div class="logo-name"><span></span>Cebraspe</div>
+        </a>
+        <ul class="side-menu">
+            <li class="active"><a href="#"><i class='bx bx-home'></i>Geral</a></li>
+            <li><a href="#"><i class='bx bx-buildings'></i>Cidade</a></li>
+            <li><a href="#"><i class='bx bx-collapse'></i>Escola</a></li>
+            <li><a href="#"><i class='bx bx-doughnut-chart'></i>Funções</a></li>
+            <li><a href="#"><i class='bx bx-task'></i>Dashboard</a></li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a class="logout" href="#">
+                <i class="bx bx-exit"></i>Sair</a>      
+            </li>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+        </nav>
+
+        <!-- End of Navbar -->
+
+        <main id="home-content" style="display: none;">
+            <div class="header">
+                <div class="left">
+                    <h1>Relatório de alocação</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#" id="link-uf">Relatório - UF</a></li>
+                        <li id="separator-city" style="display:none;">/</li>
+                        <li><a href="#" id="link-city" style="display:none;">Relatório - Cidade</a></li>
+                        <li id="separator-school" style="display:none;">/</li>
+                        <li><a href="#" id="link-school" style="display:none;">Relatório - Escola</a></li>
+                    </ul>                                       
+                </div>
+                <a href="#" class="report">
+                    <i class='bx bx-card'></i>
+                    <span>Atualizar Base</span>
+                </a>
+            </div>
+
+        <!-- Insights -->
+
+            <ul class="insights">
+                <li>
+                    <i class='bx bx-globe'></i>
+                    <span class="info">
+                        <h3 id="percentageAllocated">--</h3>
+                        <p>Alocados</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-trending-up'></i>
+                    <span class="info">
+                        <h3 id="allocatedQty">--</h3>
+                        <p>Alocados</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-trending-down'></i>
+                    <span class="info">
+                        <h3 id="remainingQty">--</h3>
+                        <p>Faltam</p>
+                    </span>
+                </li>
+                <li><i class='bx bxs-error-alt'></i>
+                    <span class="info">
+                        <h3 id="expectedQty">--</h3>
+                        <p>Previsto</p>
+                    </span>
+                </li>
+            </ul>
+
+
+            <!-- End of Insights -->
+
+            <div class="bottom-data">
+                <div id="ufSection" class="orders">
+                    <div class="header">
+                        <i class='bx bx-receipt'></i>
+                        <h3>Atualização de alocação - UF</h3>
+                        <i class='bx bx-filter'></i>
+                        <i class='bx bx-search'></i>
+                    </div>
+                    <div class="table-container"> <!-- Div adicionado aqui -->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>UF</th>
+                                    <th>Alocados - %</th>
+                                    <th>Alocados - Qtd</th>
+                                    <th>Restante</th>
+                                    <th>Previsto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ufTableBody">
+                                <!-- As linhas da tabela serão inseridas aqui pelo JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>            
+            
+            <!-- Tabe de cidades -->
+                      
+            <div class="bottom-data">   
+                <div class="orders" id="citySection" style="display: none;">
+                    <div class="header">
+                        <i class='bx bx-receipt'></i>
+                        <h3>Atualização de alocação - Cidades</h3>
+                        <i class='bx bx-filter'></i>
+                        <i class='bx bx-search'></i>
+                    </div>
+                    <div class="table-container"> <!-- Div adicionado aqui -->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>UF</th>
+                                    <th>Cidade</th>
+                                    <th>Alocados - %</th>
+                                    <th>Alocados - Qtd</th>
+                                    <th>Restante</th>
+                                    <th>Previsto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cityTableBody">
+                                <!-- As linhas da tabela serão inseridas aqui pelo JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="bottom-data">   
+                <div class="orders" id="schoolSection" style="display: none;">
+                    <div class="header">
+                        <i class='bx bx-receipt'></i>
+                        <h3>Atualização de alocação - Escolas</h3>
+                        <i class='bx bx-filter'></i>
+                        <i class='bx bx-search'></i>
+                    </div>
+                    <div class="table-container"> <!-- Div adicionado aqui -->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>UF</th>
+                                    <th>Cordenaçao</th>
+                                    <th>ID</th>
+                                    <th>Escola</th>
+                                    <th>Alocados - %</th>
+                                    <th>Alocados - Qtd</th>
+                                    <th>Restante</th>
+                                    <th>Previsto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schoolTableBody">
+                                <!-- As linhas da tabela serão inseridas aqui pelo JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+            </div> 
+
+        </main>
+
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
