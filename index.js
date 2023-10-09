@@ -98,9 +98,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 fillCityTable(data, clickedUf); // Certifique-se de ter os dados disponíveis aqui
             }
         });
+        // Chame setupCityTableClickHandler aqui, dentro do bloco .then onde data está definido
+        setupCityTableClickHandler(data);
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
 });
+
+// Relatório Geral
+// Função para carregar os dados do JSON e atualizar os valores
+function loadAndDisplayData() {
+    // Carregar dados do arquivo JSON
+    fetch('dados.json')
+    .then(response => response.json())
+    .then(data => {
+        // Calculando os valores necessários
+        let totalAllocated = 0;
+        let totalExpected = 0;
+        for (let uf in data) {
+            for (let city in data[uf]) {
+                totalAllocated += data[uf][city].total_allocated;
+                totalExpected += data[uf][city].total_expected;
+            }
+        }
+        let percentageAllocated = (totalAllocated / totalExpected) * 100;
+        let remainingQty = totalExpected - totalAllocated;
+
+        // Atualizando os valores no HTML
+        document.getElementById('percentageAllocated').textContent = percentageAllocated.toFixed(2) + '%';
+        document.getElementById('allocatedQty').textContent = totalAllocated.toLocaleString();
+        document.getElementById('remainingQty').textContent = remainingQty.toLocaleString();
+        document.getElementById('expectedQty').textContent = totalExpected.toLocaleString();
+    })
+    .catch(error => console.error('Error loading JSON data:', error));
+}
+
+// Chamar a função quando a página for carregada
+document.addEventListener('DOMContentLoaded', loadAndDisplayData);
 
 function fillUfTable(data) {
     const tableBody = document.getElementById('ufTableBody');
@@ -133,48 +166,21 @@ function fillUfTable(data) {
 }
 
 function setupUfTableClickHandler(data) {
-    const tableBody = document.getElementById('ufTableBody');
-    if (!tableBody) return console.error('Elemento tbody não encontrado');
+    const ufTableBody = document.getElementById('ufTableBody');
+    if (!ufTableBody) return console.error('Elemento tbody da UF não encontrado');
 
-    tableBody.addEventListener('click', function(e) {
+    ufTableBody.addEventListener('click', function(e) {
         if (e.target.tagName === 'TD') {
             const clickedUf = e.target.parentElement.firstElementChild.textContent;
+            // Ocultar tabela UF
+            document.getElementById('ufSection').style.display = 'none';
+            // Mostrar tabela de cidades
+            document.getElementById('citySection').style.display = 'block';
+            // Preencher tabela de cidades com dados da UF clicada
             fillCityTable(data, clickedUf);
         }
     });
 }
-
-// Função para carregar os dados do JSON e atualizar os valores
-function loadAndDisplayData() {
-    // Carregar dados do arquivo JSON
-    fetch('dados.json')
-    .then(response => response.json())
-    .then(data => {
-        // Calculando os valores necessários
-        let totalAllocated = 0;
-        let totalExpected = 0;
-        for (let uf in data) {
-            for (let city in data[uf]) {
-                totalAllocated += data[uf][city].total_allocated;
-                totalExpected += data[uf][city].total_expected;
-            }
-        }
-        let percentageAllocated = (totalAllocated / totalExpected) * 100;
-        let remainingQty = totalExpected - totalAllocated;
-
-        // Atualizando os valores no HTML
-        document.getElementById('percentageAllocated').textContent = percentageAllocated.toFixed(2) + '%';
-        document.getElementById('allocatedQty').textContent = totalAllocated.toLocaleString();
-        document.getElementById('remainingQty').textContent = remainingQty.toLocaleString();
-        document.getElementById('expectedQty').textContent = totalExpected.toLocaleString();
-    })
-    .catch(error => console.error('Error loading JSON data:', error));
-}
-
-// Chamar a função quando a página for carregada
-document.addEventListener('DOMContentLoaded', loadAndDisplayData);
-
-
 
 function fillCityTable(data, clickedUf) {
     const tableBody = document.getElementById('cityTableBody');
@@ -198,57 +204,61 @@ function fillCityTable(data, clickedUf) {
     }
 }
 
-// Adicionar na sua lista de listeners
-document.getElementById('cityTableBody').addEventListener('click', function(e) {
-    if (e.target.tagName === 'TD') {
-        const clickedCity = e.target.parentElement.firstElementChild.textContent;
-        // Ocultar tabela de cidades
-        document.getElementById('citySection').style.display = 'none';
-        // Mostrar tabela de escolas
-        document.getElementById('schoolSection').style.display = 'block';
-        // Preencher tabela de escolas com dados da cidade clicada
-        fillSchoolTable(data, clickedCity);
-    }
-});
+function setupCityTableClickHandler(data) {
+    const cityTableBody = document.getElementById('cityTableBody');
+    if (!cityTableBody) return console.error('Elemento tbody da Cidade não encontrado');
 
-document.getElementById('cityTableBody').addEventListener('click', function(e) {
-    if (e.target.tagName === 'TD') {
-        const clickedUf = e.target.parentElement.firstElementChild.textContent;
-        const clickedCity = e.target.parentElement.children[1].textContent;
-        fillSchoolTable(clickedUf, clickedCity); 
-    }
-});
-
-function fillSchoolTable(selectedUf, selectedCity) {
-    const tableBody = document.getElementById('schoolTableBody');
-    tableBody.innerHTML = ''; // Limpar a tabela
-
-    const cityData = data[selectedUf][selectedCity].details;
-    for (const schoolName in cityData) {
-        const schoolData = cityData[schoolName];
-        let allocated = 0;
-        let expected = 0;
-        let nro_coordenacao = 0;
-        let local_prova_id = 0;
-        for (const position in schoolData) {
-            allocated += schoolData[position].allocated;
-            expected += schoolData[position].expected;
-            nro_coordenacao = schoolData[position].nro_coordenacao;
-            local_prova_id = schoolData[position].local_prova_id;
+    cityTableBody.addEventListener('click', function(e) {
+        if (e.target.tagName === 'TD') {
+            const clickedUf = e.target.parentElement.firstElementChild.textContent;
+            const clickedCity = e.target.parentElement.children[1].textContent;
+            // Ocultar tabela da Cidade
+            document.getElementById('citySection').style.display = 'none';
+            // Mostrar tabela da Escola
+            document.getElementById('schoolSection').style.display = 'block';
+            // Preencher tabela da Escola com dados da Cidade clicada
+            fillSchoolTable(data, clickedUf, clickedCity);
         }
+    });
+}
+
+function fillSchoolTable(data, clickedUf, clickedCity) {
+    const tableBody = document.getElementById('schoolTableBody');
+    if (!tableBody) return console.error('Elemento tbody da Escola não encontrado');
+
+    tableBody.innerHTML = ''; // Limpar tabela da Escola
+    const cityData = data[clickedUf][clickedCity].details; // Dados da cidade específica
+
+    for (let schoolName in cityData) {
+        let totalAllocated = 0;
+        let totalExpected = 0;
+        let nroCoordenacao;
+        let localProvaId;
+
+        for (let jobName in cityData[schoolName]) {
+            const job = cityData[schoolName][jobName];
+            totalAllocated += job.allocated;
+            totalExpected += job.expected;
+            // Assumindo que nro_coordenacao e local_prova_id são os mesmos para todos os trabalhos em uma escola
+            nroCoordenacao = job.nro_coordenacao;
+            localProvaId = job.local_prova_id;
+        }
+
+        const percentageAllocated = ((totalAllocated / totalExpected) * 100).toFixed(2) + '%';
+        const remaining = totalExpected - totalAllocated;
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${selectedUf}</td>
-            <td>${nro_coordenacao}</td>
-            <td>${local_prova_id}</td>
+            
+            <td>${nroCoordenacao}</td>
+            <td>${localProvaId}</td>
             <td>${schoolName}</td>
-            <td>${(allocated / expected * 100).toFixed(2)}%</td>
-            <td>${allocated}</td>
-            <td>${expected - allocated}</td>
-            <td>${expected}</td>
+            <td>${percentageAllocated}</td>
+            <td>${totalAllocated}</td>
+            <td>${remaining}</td>
+            <td>${totalExpected}</td>
         `;
         tableBody.appendChild(tr);
     }
 }
-
 
