@@ -19,12 +19,13 @@
             <div class="logo-name"><span></span>ALOCAÇÃO</div>
         </a>
         <ul class="side-menu">
-            <li class="active"><a href="#"><i class='bx bx-home'></i>Geral</a></li>
-            <li><a href="#"><i class='bx bx-buildings'></i>Cidade</a></li>
-            <li><a href="#"><i class='bx bx-collapse'></i>Escola</a></li>
-            <li><a href="#"><i class='bx bx-doughnut-chart'></i>Funções</a></li>
-            <li><a href="#"><i class='bx bx-task'></i>Dashboard</a></li>
+            <li class="active" id="menu-general"><a href="#"><i class='bx bx-home'></i>Geral</a></li>
+            <li id="menu-city"><a href="#"><i class='bx bx-buildings'></i>Cidade</a></li>
+            <li id="menu-school"><a href="#"><i class='bx bx-collapse'></i>Escola</a></li>
+            <li id="menu-functions"><a href="#"><i class='bx bx-doughnut-chart'></i>Funções</a></li>
+            <li id="menu-dashboard"><a href="#"><i class='bx bx-task'></i>Dashboard</a></li>
         </ul>
+
         <ul class="side-menu">
             <li>
                 <a class="logout" href="#">
@@ -39,12 +40,13 @@
         <!-- Navbar -->
         <nav>
             <i class='bx bx-menu'></i>
-            <form action="#">
-                <div class="form-input">
-                    <input type="search" placeholder="Search...">
-                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
-                </div>
-            </form>
+                <form action="#" id="searchForm">
+                    <div class="form-input">
+                        <input type="search" id="searchInput" placeholder="Search...">
+                        <div id="suggestions" class="suggestions"></div>
+                        <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                    </div>
+                </form>
             <input type="checkbox" id="theme-toggle" hidden>
             <label for="theme-toggle" class="theme-toggle"></label>
         </nav>
@@ -107,7 +109,6 @@
                         <i class='bx bx-receipt'></i>
                         <h3>Atualização de alocação - UF</h3>
                         <i class='bx bx-filter'></i>
-                        <i class='bx bx-search'></i>
                     </div>
                     <div class="table-container"> <!-- Div adicionado aqui -->
                         <table>
@@ -136,7 +137,6 @@
                         <i class='bx bx-receipt'></i>
                         <h3>Atualização de alocação - Cidades</h3>
                         <i class='bx bx-filter'></i>
-                        <i class='bx bx-search'></i>
                     </div>
                     <div class="table-container"> <!-- Div adicionado aqui -->
                         <table>
@@ -164,7 +164,6 @@
                         <i class='bx bx-receipt'></i>
                         <h3>Atualização de alocação - Escolas</h3>
                         <i class='bx bx-filter'></i>
-                        <i class='bx bx-search'></i>
                     </div>
                     <div class="table-container">
                         <table>

@@ -436,6 +436,7 @@ body{
     color: var(--dark);
 }
 
+
 .content main .bottom-data{
     display: flex;
     flex-wrap: wrap;
@@ -475,8 +476,12 @@ body{
 }
 
 .content main .bottom-data .orders table{
-    width: 100%;
-    border-collapse: collapse;
+    min-width: 340px;
+    max-width: 100%;
+}
+
+.content main .bottom-data .orders {
+    overflow: auto;
 }
 
 .content main .bottom-data .orders table th{
@@ -518,7 +523,7 @@ body{
     padding: 6px 16px;
     color: var(--light);
     border-radius: 20px;
-    font-weight: 700;
+    faont-weight: 700;
 }
 
 .content main .bottom-data .orders table tr td .status.completed{
@@ -629,10 +634,6 @@ body{
         min-width: 340px;
     }
 
-    .content main .bottom-data .orders table{
-        min-width: 340px;
-    }
-
     .content main .bottom-data .reminders .task-list{
         min-width: 340px;
     }
@@ -648,10 +649,9 @@ body{
     text-align: center;
 }
 
-/* Adicione este CSS no final do arquivo style.css */
 .orders table tbody {
     display: block;
-    max-height: 250px;  /* Você pode ajustar esta altura conforme necessário */
+    max-height: 250px; 
     overflow-y: auto;
 }
 
@@ -662,8 +662,3 @@ body{
     table-layout: fixed;
 }
 
-.signature {
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;  /* Optional: you can set padding */
-}

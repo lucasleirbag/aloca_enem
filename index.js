@@ -100,6 +100,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         // Chame setupCityTableClickHandler aqui, dentro do bloco .then onde data está definido
         setupCityTableClickHandler(data);
+
+        // Adicionando event listeners para os links do breadcrumb
+        document.getElementById('link-uf').addEventListener('click', function(e) {
+            e.preventDefault();
+            showUfTable();
+        });
+
+        document.getElementById('link-city').addEventListener('click', function(e) {
+            e.preventDefault();
+            showCityTable();
+        });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
 });
@@ -260,5 +271,63 @@ function fillSchoolTable(data, clickedUf, clickedCity) {
         `;
         tableBody.appendChild(tr);
     }
+}
+
+function showUfTable() {
+    // Mostrar tabela UF
+    document.getElementById('ufSection').style.display = 'block';
+    // Ocultar outras tabelas
+    document.getElementById('citySection').style.display = 'none';
+    document.getElementById('schoolSection').style.display = 'none';
+    // Atualizar breadcrumb
+    document.getElementById('separator-city').style.display = 'none';
+    document.getElementById('link-city').style.display = 'none';
+    document.getElementById('separator-school').style.display = 'none';
+    document.getElementById('link-school').style.display = 'none';
+}
+
+function showCityTable(clickedUf) {
+    // Mostrar tabela de cidades
+    document.getElementById('citySection').style.display = 'block';
+    // Ocultar outras tabelas
+    document.getElementById('ufSection').style.display = 'none';
+    document.getElementById('schoolSection').style.display = 'none';
+    // Atualizar breadcrumb
+    document.getElementById('separator-city').style.display = 'inline';
+    document.getElementById('link-city').style.display = 'inline';
+    document.getElementById('link-city').textContent = 'Relatório - ' + clickedUf;
+    document.getElementById('separator-school').style.display = 'none';
+    document.getElementById('link-school').style.display = 'none';
+}
+
+// Capturar o campo de pesquisa e adicionar um evento
+const searchInput = document.querySelector('input[type="search"]');
+searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    
+    // Verificar em cada tabela
+    filterTable('ufTableBody', searchTerm);
+    filterTable('cityTableBody', searchTerm);
+    filterTable('schoolTableBody', searchTerm);
+});
+
+// Função para filtrar tabelas
+function filterTable(tableId, term) {
+    const table = document.getElementById(tableId);
+    const rows = table.querySelectorAll('tr');
+
+    // Iterar sobre as linhas da tabela
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        let rowText = '';
+        
+        // Concatenar texto de todas as células
+        cells.forEach(cell => {
+            rowText += cell.textContent.toLowerCase();
+        });
+        
+        // Comparar texto da linha com termo de pesquisa
+        row.style.display = rowText.includes(term) ? '' : 'none';
+    });
 }
 
