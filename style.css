@@ -436,7 +436,6 @@ body{
     color: var(--dark);
 }
 
-
 .content main .bottom-data{
     display: flex;
     flex-wrap: wrap;
@@ -476,12 +475,8 @@ body{
 }
 
 .content main .bottom-data .orders table{
-    min-width: 340px;
-    max-width: 100%;
-}
-
-.content main .bottom-data .orders {
-    overflow: auto;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .content main .bottom-data .orders table th{
@@ -523,7 +518,7 @@ body{
     padding: 6px 16px;
     color: var(--light);
     border-radius: 20px;
-    faont-weight: 700;
+    font-weight: 700;
 }
 
 .content main .bottom-data .orders table tr td .status.completed{
@@ -634,6 +629,10 @@ body{
         min-width: 340px;
     }
 
+    .content main .bottom-data .orders table{
+        min-width: 340px;
+    }
+
     .content main .bottom-data .reminders .task-list{
         min-width: 340px;
     }
@@ -648,17 +647,3 @@ body{
     font-size: 0.8rem;
     text-align: center;
 }
-
-.orders table tbody {
-    display: block;
-    max-height: 250px; 
-    overflow-y: auto;
-}
-
-.orders table thead,
-.orders table tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-
