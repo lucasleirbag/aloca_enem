@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(data => {
         fillUfTable(data);
+        sortTableByPercentage('ufTableBody');
         setupUfTableClickHandler(data);
 
         const ufTableBody = document.getElementById('ufTableBody');
@@ -98,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('citySection').style.display = 'block';
                 // Preencher tabela de cidades com dados da UF clicada
                 fillCityTable(data, clickedUf); // Certifique-se de ter os dados disponíveis aqui
+                sortTableByPercentage('cityTableBody');
             }
         });
         // Chame setupCityTableClickHandler aqui, dentro do bloco .then onde data está definido
@@ -231,6 +233,7 @@ function setupCityTableClickHandler(data) {
             document.getElementById('schoolSection').style.display = 'block';
             // Preencher tabela da Escola com dados da Cidade clicada
             fillSchoolTable(data, clickedUf, clickedCity);
+            sortTableByPercentage('schoolTableBody');
         }
     });
 }
@@ -348,6 +351,8 @@ function setupSchoolTableClickHandler(data) {
             document.getElementById('functionSection').style.display = 'block';
             // Preencher tabela de Funções com dados da Escola clicada
             fillFunctionTable(data, clickedUf, clickedCity, clickedSchool);
+            sortTableByPercentage('functionTableBody');
+
         }
     });
 }
@@ -378,4 +383,31 @@ function fillFunctionTable(data, clickedUf, clickedCity, clickedSchool) {
         functionTableBody.appendChild(tr);
     }
 }
+
+function sortTableByPercentage(tbodyId) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+
+    // Detectar a coluna "Alocados - %"
+    const headerRow = tbody.parentElement.querySelector("thead tr");
+    let percentageColumnIndex = -1;
+    for (let i = 0; i < headerRow.cells.length; i++) {
+        if (headerRow.cells[i].textContent.trim() === "Alocados - %") {
+            percentageColumnIndex = i;
+            break;
+        }
+    }
+
+    if (percentageColumnIndex === -1) return;  // Se a coluna não foi encontrada, retorne
+
+    const rows = Array.from(tbody.querySelectorAll("tr")).sort((a, b) => {
+        const percentageA = parseFloat(a.cells[percentageColumnIndex].textContent);
+        const percentageB = parseFloat(b.cells[percentageColumnIndex].textContent);
+        return percentageB - percentageA;
+    });
+
+    // Anexar linhas ordenadas de volta ao tbody
+    rows.forEach(row => tbody.appendChild(row));
+}
+
 
