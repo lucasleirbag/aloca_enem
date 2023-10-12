@@ -410,4 +410,20 @@ function sortTableByPercentage(tbodyId) {
     rows.forEach(row => tbody.appendChild(row));
 }
 
-
+document.querySelectorAll('.btn-back').forEach(button => {
+    button.addEventListener('click', function() {
+        const section = button.closest('.orders');
+        if (section.id === 'citySection') {
+            showUfTable();
+        } else if (section.id === 'schoolSection') {
+            // Aqui você pode decidir se quer mostrar a tabela da UF ou da Cidade.
+            // Por enquanto, estou mostrando a tabela da Cidade.
+            document.getElementById('citySection').style.display = 'block';
+            document.getElementById('schoolSection').style.display = 'none';
+        } else if (section.id === 'functionSection') {
+            // Modifique conforme sua necessidade.
+            document.getElementById('schoolSection').style.display = 'block';
+            document.getElementById('functionSection').style.display = 'none';
+        }
+    });
+});

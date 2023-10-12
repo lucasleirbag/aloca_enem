@@ -640,3 +640,14 @@ body{
     font-size: 0.8rem;
     text-align: center;
 }
+
+.btn-back {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-back:hover {
+    opacity: 0.7;
+}
