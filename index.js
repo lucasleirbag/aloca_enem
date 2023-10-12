@@ -1,3 +1,5 @@
+document.querySelector('.sidebar').classList.add('close');
+
 const sideLinks = document.querySelectorAll('.sidebar .side-menu li a:not(.logout)');
 
 sideLinks.forEach(item => {
@@ -109,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('link-city').addEventListener('click', function(e) {
             e.preventDefault();
-            showCityTable();
+            showCityTable
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
@@ -329,5 +331,51 @@ function filterTable(tableId, term) {
         // Comparar texto da linha com termo de pesquisa
         row.style.display = rowText.includes(term) ? '' : 'none';
     });
+}
+
+function setupSchoolTableClickHandler(data) {
+    const schoolTableBody = document.getElementById('schoolTableBody');
+    if (!schoolTableBody) return console.error('Elemento tbody da Escola não encontrado');
+
+    schoolTableBody.addEventListener('click', function(e) {
+        if (e.target.tagName === 'TD') {
+            const clickedUf = e.target.parentElement.firstElementChild.textContent;
+            const clickedCity = e.target.parentElement.children[1].textContent;
+            const clickedSchool = e.target.parentElement.children[2].textContent;
+            // Ocultar tabela da Escola
+            document.getElementById('schoolSection').style.display = 'none';
+            // Mostrar tabela de Funções
+            document.getElementById('functionSection').style.display = 'block';
+            // Preencher tabela de Funções com dados da Escola clicada
+            fillFunctionTable(data, clickedUf, clickedCity, clickedSchool);
+        }
+    });
+}
+
+// Adicionar esta função para preencher a tabela de Funções
+function fillFunctionTable(data, clickedUf, clickedCity, clickedSchool) {
+    const functionTableBody = document.getElementById('functionTableBody');
+    if (!functionTableBody) return console.error('Elemento tbody das Funções não encontrado');
+
+    functionTableBody.innerHTML = ''; // Limpar tabela de Funções
+    const schoolData = data[clickedUf][clickedCity].details[clickedSchool];
+
+    for (let functionName in schoolData) {
+        const functionDetails = schoolData[functionName];
+        const allocated = functionDetails.allocated;
+        const expected = functionDetails.expected;
+        const percentageAllocated = ((allocated / expected) * 100).toFixed(2) + '%';
+        const remaining = expected - allocated;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${functionName}</td>
+            <td>${percentageAllocated}</td>
+            <td>${allocated}</td>
+            <td>${remaining}</td>
+            <td>${expected}</td>
+        `;
+        functionTableBody.appendChild(tr);
+    }
 }
 

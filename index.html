@@ -56,26 +56,15 @@
         <main id="home-content" style="display: none;">
             <div class="header">
                 <div class="left">
-                    <h1>Relatório de alocação</h1>
-                    <ul class="breadcrumb">
-                        <li><a href="#" id="link-uf">Relatório - UF</a></li>
-                        <li id="separator-city" style="display:none;">/</li>
-                        <li><a href="#" id="link-city" style="display:none;">Relatório - Cidade</a></li>
-                        <li id="separator-school" style="display:none;">/</li>
-                        <li><a href="#" id="link-school" style="display:none;">Relatório - Escola</a></li>
-                    </ul>                                       
+                    <h1>Relatório de alocação</h1>                                     
                 </div>
-                <a href="#" class="report">
-                    <i class='bx bx-card'></i>
-                    <span>Atualizar Base</span>
-                </a>
             </div>
 
             <!-- Insights -->
 
             <ul class="insights">
                 <li>
-                    <i class='bx bx-globe'></i>
+                    <i class='bx bxs-objects-vertical-bottom'></i>
                     <span class="info">
                         <h3 id="percentageAllocated">--</h3>
                         <p>Alocados</p>
@@ -179,6 +168,32 @@
                                 </tr>
                             </thead>
                             <tbody id="schoolTableBody">
+                                <!-- Linhas da tabela serão inseridas aqui pelo JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-data">   
+                <div class="orders" id="functionSection" style="display: none;">
+                    <div class="header">
+                        <i class='bx bx-receipt'></i>
+                        <h3>Atualização de alocação - Funções</h3>
+                        <i class='bx bx-filter'></i>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Função</th>
+                                    <th>Alocados - %</th>
+                                    <th>Alocados - Qtd</th>
+                                    <th>Restante</th>
+                                    <th>Previsto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="functionTableBody">
                                 <!-- Linhas da tabela serão inseridas aqui pelo JavaScript -->
                             </tbody>
                         </table>

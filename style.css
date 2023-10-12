@@ -36,6 +36,7 @@ li{
 
 html{
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body.dark{
@@ -47,6 +48,7 @@ body.dark{
 body{
     background: var(--grey);
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .sidebar{
@@ -60,6 +62,7 @@ body{
     overflow-x: hidden;
     scrollbar-width: none;
     transition: all 0.3s ease;
+    z-index: 1;
 }
 
 .sidebar::-webkit-scrollbar{
@@ -68,6 +71,7 @@ body{
 
 .sidebar.close{
     width: 60px;
+    z-index: 1;
 }
 
 .sidebar .logo img {
@@ -189,6 +193,7 @@ body{
     width: calc(100% - 230px);
     left: 230px;
     transition: all 0.3s ease;
+    overflow-y: auto;
 }
 
 .sidebar.close~.content{
@@ -341,7 +346,7 @@ body{
 .content main .header .left h1{
     font-size: 36px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     color: var(--dark);
 }
 
@@ -427,7 +432,7 @@ body{
 }
 
 .content main .insights li .info h3{
-    font-size: 24px;
+    font-size: 40px;
     font-weight: 600;
     color: var(--dark);
 }
@@ -576,18 +581,6 @@ body{
 
 .content main .bottom-data .reminders .task-list li:last-child{
    margin-bottom: 0;
-}
-
-@media screen and (max-width: 768px) {
-    .sidebar{
-        width: 200px;
-    }
-
-    .content{
-        width: calc(100% - 60px);
-        left: 200px;
-    }
-
 }
 
 @media screen and (max-width: 576px) {
