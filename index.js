@@ -52,10 +52,13 @@ const toggler = document.getElementById('theme-toggle');
 toggler.addEventListener('change', function () {
     if (this.checked) {
         document.body.classList.add('dark');
+        localStorage.setItem('theme', 'dark'); // salvar escolha no localStorage
     } else {
         document.body.classList.remove('dark');
+        localStorage.setItem('theme', 'light'); // salvar escolha no localStorage
     }
 });
+
 const homeLink = document.querySelector('.sidebar .side-menu li a[href="#"]');
 const homeContent = document.getElementById('home-content');
 homeContent.style.display = 'block';
@@ -79,6 +82,20 @@ sideLinks.forEach(link => {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // Aplicar o tema salvo no localStorage
+    const savedTheme = localStorage.getItem('theme');
+    const toggler = document.getElementById('theme-toggle');
+    if (savedTheme) {
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark');
+            toggler.checked = true;
+        } else {
+            document.body.classList.remove('dark');
+            toggler.checked = false;
+        }
+    }
+
     // Carregar dados do arquivo JSON
     fetch('dados.json')
     .then(response => response.json())
@@ -98,10 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Mostrar tabela de cidades
                 document.getElementById('citySection').style.display = 'block';
                 // Preencher tabela de cidades com dados da UF clicada
-                fillCityTable(data, clickedUf); // Certifique-se de ter os dados disponíveis aqui
+                fillCityTable(data, clickedUf);
                 sortTableByPercentage('cityTableBody');
             }
         });
+
         // Chame setupCityTableClickHandler aqui, dentro do bloco .then onde data está definido
         setupCityTableClickHandler(data);
 
@@ -113,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('link-city').addEventListener('click', function(e) {
             e.preventDefault();
-            showCityTable
+            showCityTable();  // Faltou os parênteses aqui
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
