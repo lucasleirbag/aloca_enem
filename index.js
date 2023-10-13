@@ -1,88 +1,106 @@
-document.querySelector('.sidebar').classList.add('close');
+/**
+ * @fileoverview Este script contém funções e lógicas relacionadas à manipulação do DOM e interações na interface.
+ */
 
+// Definindo elementos principais do DOM, como a sidebar, links na sidebar, barras de menu, tema, etc.
+
+/** @constant {Element} sideBar - O elemento da barra lateral */
+const sideBar = document.querySelector('.sidebar');
+sideBar.classList.add('close');
+
+/** @constant {NodeList} sideLinks - Links na barra lateral, excluindo o link de logout */
 const sideLinks = document.querySelectorAll('.sidebar .side-menu li a:not(.logout)');
 
-sideLinks.forEach(item => {
-    const li = item.parentElement;
-    item.addEventListener('click', () => {
-        sideLinks.forEach(i => {
-            i.parentElement.classList.remove('active');
-        })
-        li.classList.add('active');
-    })
-});
-
+/** @constant {Element} menuBar - O ícone da barra de menu */
 const menuBar = document.querySelector('.content nav .bx.bx-menu');
-const sideBar = document.querySelector('.sidebar');
 
-menuBar.addEventListener('click', () => {
-    sideBar.classList.toggle('close');
-});
-
+/** @constant {Element} searchBtn - O botão de pesquisa */
 const searchBtn = document.querySelector('.content nav form .form-input button');
+
+/** @constant {Element} searchBtnIcon - O ícone dentro do botão de pesquisa */
 const searchBtnIcon = document.querySelector('.content nav form .form-input button .bx');
+
+/** @constant {Element} searchForm - O formulário de pesquisa */
 const searchForm = document.querySelector('.content nav form');
 
-searchBtn.addEventListener('click', function (e) {
-    if (window.innerWidth < 576) {
-        e.preventDefault;
-        searchForm.classList.toggle('show');
-        if (searchForm.classList.contains('show')) {
-            searchBtnIcon.classList.replace('bx-search', 'bx-x');
-        } else {
-            searchBtnIcon.classList.replace('bx-x', 'bx-search');
-        }
-    }
-});
+/** @constant {Element} homeLink - Link para a página inicial */
+const homeLink = document.querySelector('.sidebar .side-menu li a[href="#"]');
 
-window.addEventListener('resize', () => {
+/** @constant {Element} homeContent - Conteúdo da página inicial */
+const homeContent = document.getElementById('home-content');
+homeContent.style.display = 'block';
+
+/** @constant {Element} toggler - O switch para alternar entre temas */
+const toggler = document.getElementById('theme-toggle');
+
+/**
+ * Alterna a visibilidade da barra lateral.
+ */
+function toggleSideBar() {
+    sideBar.classList.toggle('close');
+}
+
+/**
+ * Trata o evento de clique em um link lateral, tornando-o ativo e desativando outros links.
+ * @param {Event} event - O evento de clique.
+ */
+function handleSideLinkClick(event) {
+    sideLinks.forEach(link => {
+        link.parentElement.classList.remove('active');
+    });
+    event.currentTarget.parentElement.classList.add('active');
+}
+
+/**
+ * Manipula o evento de clique no botão de pesquisa, mostrando/ocultando o formulário de pesquisa.
+ * @param {Event} e - O evento de clique.
+ */
+function handleSearchButtonClick(e) {
+    if (window.innerWidth < 576) {
+        e.preventDefault();
+        searchForm.classList.toggle('show');
+        const iconClass = searchForm.classList.contains('show') ? ['bx-search', 'bx-x'] : ['bx-x', 'bx-search'];
+        searchBtnIcon.classList.replace(...iconClass);
+    }
+}
+
+/**
+ * Trata o evento de redimensionamento da janela, ajustando elementos conforme a largura da janela.
+ */
+function handleWindowResize() {
     if (window.innerWidth < 768) {
         sideBar.classList.add('close');
     } else {
         sideBar.classList.remove('close');
     }
+
     if (window.innerWidth > 576) {
         searchBtnIcon.classList.replace('bx-x', 'bx-search');
         searchForm.classList.remove('show');
     }
-});
+}
 
-const toggler = document.getElementById('theme-toggle');
+/**
+ * Alterna o tema entre claro e escuro.
+ */
+function toggleTheme() {
+    const theme = this.checked ? 'dark' : 'light';
+    document.body.classList.toggle('dark', this.checked);
+    localStorage.setItem('theme', theme);
+}
 
-toggler.addEventListener('change', function () {
-    if (this.checked) {
-        document.body.classList.add('dark');
-        localStorage.setItem('theme', 'dark'); // salvar escolha no localStorage
-    } else {
-        document.body.classList.remove('dark');
-        localStorage.setItem('theme', 'light'); // salvar escolha no localStorage
-    }
-});
-
-const homeLink = document.querySelector('.sidebar .side-menu li a[href="#"]');
-const homeContent = document.getElementById('home-content');
-homeContent.style.display = 'block';
-
-homeLink.addEventListener('click', function(e) {
+/**
+ * Trata o evento de clique no link da página inicial.
+ * @param {Event} e - O evento de clique.
+ */
+function handleHomeLinkClick(e) {
     e.preventDefault();
     homeContent.style.display = 'block';
-});
+}
 
-sideLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-        if (link.href.endsWith('#')) {
-            e.preventDefault();
-            if (link.querySelector('.bx-home')) {
-                homeContent.style.display = 'block';
-            } else {
-                homeContent.style.display = 'none';
-            }
-        }
-    });
-});
+// Manipula o evento 'DOMContentLoaded', inicializando configurações e carregando dados.
 
-document.addEventListener('DOMContentLoaded', function() {
-    
+function handleContentLoaded() {
     // Aplicar o tema salvo no localStorage
     const savedTheme = localStorage.getItem('theme');
     const toggler = document.getElementById('theme-toggle');
@@ -102,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
         fillUfTable(data);
         sortTableByPercentage('ufTableBody');
-        setupUfTableClickHandler(data);
 
         const ufTableBody = document.getElementById('ufTableBody');
         if (!ufTableBody) return console.error('Elemento tbody da UF não encontrado');
@@ -135,38 +152,135 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
+}
+
+function updateInsights(data) {
+    // Supondo que os dados estejam estruturados de uma forma específica (isso pode precisar ser ajustado)
+    let totalAllocated = 0;
+    let totalExpected = 0;
+    
+    for (let uf in data) {
+        for (let city in data[uf]) {
+            totalAllocated += data[uf][city].total_allocated;
+            totalExpected += data[uf][city].total_expected;
+        }
+    }
+
+    const percentageAllocated = (totalAllocated / totalExpected * 100).toFixed(2) + '%';
+    const remainingQty = totalExpected - totalAllocated;
+
+    // Atualizar o DOM
+    document.getElementById("percentageAllocated").textContent = percentageAllocated;
+    document.getElementById("allocatedQty").textContent = totalAllocated.toLocaleString('pt-BR');
+    document.getElementById("remainingQty").textContent = remainingQty.toLocaleString('pt-BR');
+    document.getElementById("expectedQty").textContent = totalExpected.toLocaleString('pt-BR');
+}
+
+// Agora, atualize os event listeners para usar a função `handleContentLoaded`:
+
+document.removeEventListener('DOMContentLoaded', function() {});  // Remova o antigo event listener
+document.addEventListener('DOMContentLoaded', handleContentLoaded);  // Adicione o novo event listener
+
+// Event listeners
+
+menuBar.addEventListener('click', toggleSideBar);
+searchBtn.addEventListener('click', handleSearchButtonClick);
+window.addEventListener('resize', handleWindowResize);
+toggler.addEventListener('change', toggleTheme);
+homeLink.addEventListener('click', handleHomeLinkClick);
+document.addEventListener('DOMContentLoaded', handleContentLoaded);
+
+sideLinks.forEach(link => {
+    link.addEventListener('click', handleSideLinkClick);
 });
 
-// Relatório Geral
-// Função para carregar os dados do JSON e atualizar os valores
-function loadAndDisplayData() {
-    // Carregar dados do arquivo JSON
+// ------------------ INICIALIZAÇÃO ------------------
+
+document.addEventListener('DOMContentLoaded', function() {
+    applySavedTheme();
+    loadDataAndSetupHandlers();
+    loadAndDisplayData();
+});
+
+// ------------------ TEMAS ------------------
+
+function applySavedTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const toggler = document.getElementById('theme-toggle');
+    if (!savedTheme) return;
+
+    const isDarkTheme = savedTheme === 'dark';
+    document.body.classList.toggle('dark', isDarkTheme);
+    toggler.checked = isDarkTheme;
+}
+
+// ------------------ CARREGAMENTO DE DADOS E MANIPULAÇÃO ------------------
+
+function loadDataAndSetupHandlers() {
     fetch('dados.json')
     .then(response => response.json())
     .then(data => {
-        // Calculando os valores necessários
-        let totalAllocated = 0;
-        let totalExpected = 0;
-        for (let uf in data) {
-            for (let city in data[uf]) {
-                totalAllocated += data[uf][city].total_allocated;
-                totalExpected += data[uf][city].total_expected;
-            }
-        }
-        let percentageAllocated = (totalAllocated / totalExpected) * 100;
-        let remainingQty = totalExpected - totalAllocated;
-
-        // Atualizando os valores no HTML
-        document.getElementById('percentageAllocated').textContent = percentageAllocated.toFixed(2) + '%';
-        document.getElementById('allocatedQty').textContent = totalAllocated.toLocaleString();
-        document.getElementById('remainingQty').textContent = remainingQty.toLocaleString();
-        document.getElementById('expectedQty').textContent = totalExpected.toLocaleString();
+        updateInsights(data);
+        setupBreadcrumbHandlers();
     })
-    .catch(error => console.error('Error loading JSON data:', error));
+    .catch(error => console.error('Erro ao carregar os dados:', error));
 }
 
-// Chamar a função quando a página for carregada
-document.addEventListener('DOMContentLoaded', loadAndDisplayData);
+function setupTables(data) {
+    fillUfTable(data);
+    sortTableByPercentage('ufTableBody');
+    setupTableClickHandlers(data);
+}
+
+function setupTableClickHandlers(data) {
+    const ufTableBody = document.getElementById('ufTableBody');
+    const cityTableBody = document.getElementById('cityTableBody');
+    const schoolTableBody = document.getElementById('schoolTableBody');
+
+    ufTableBody.addEventListener('click', function(e) {
+        if (e.target.tagName === 'TD') {
+            const clickedUf = e.target.parentElement.firstElementChild.textContent;
+            switchSection('ufSection', 'citySection');
+            fillCityTable(data, clickedUf);
+            sortTableByPercentage('cityTableBody');
+        }
+    });
+
+    cityTableBody.addEventListener('click', function(e) {
+        if (e.target.tagName === 'TD') {
+            const clickedUf = e.target.parentElement.firstElementChild.textContent;
+            const clickedCity = e.target.parentElement.children[1].textContent;
+            switchSection('citySection', 'schoolSection');
+            fillSchoolTable(data, clickedUf, clickedCity);
+            sortTableByPercentage('schoolTableBody');
+        }
+    });
+
+    schoolTableBody.addEventListener('click', function(e) {
+        if (e.target.tagName === 'TD') {
+            const clickedUf = e.target.parentElement.firstElementChild.textContent;
+            const clickedCity = e.target.parentElement.children[1].textContent;
+            const clickedSchool = e.target.parentElement.children[2].textContent;
+            switchSection('schoolSection', 'functionSection');
+            fillFunctionTable(data, clickedUf, clickedCity, clickedSchool);
+            sortTableByPercentage('functionTableBody');
+        }
+    });
+}
+
+function setupBreadcrumbHandlers() {
+    document.getElementById('link-uf').addEventListener('click', function(e) {
+        e.preventDefault();
+        showUfTable();
+    });
+
+    document.getElementById('link-city').addEventListener('click', function(e) {
+        e.preventDefault();
+        showCityTable();
+    });
+}
+
+// ------------------ FUNÇÕES DE PREENCHIMENTO DE TABELAS ------------------
 
 function fillUfTable(data) {
     const tableBody = document.getElementById('ufTableBody');
@@ -198,23 +312,6 @@ function fillUfTable(data) {
     });
 }
 
-function setupUfTableClickHandler(data) {
-    const ufTableBody = document.getElementById('ufTableBody');
-    if (!ufTableBody) return console.error('Elemento tbody da UF não encontrado');
-
-    ufTableBody.addEventListener('click', function(e) {
-        if (e.target.tagName === 'TD') {
-            const clickedUf = e.target.parentElement.firstElementChild.textContent;
-            // Ocultar tabela UF
-            document.getElementById('ufSection').style.display = 'none';
-            // Mostrar tabela de cidades
-            document.getElementById('citySection').style.display = 'block';
-            // Preencher tabela de cidades com dados da UF clicada
-            fillCityTable(data, clickedUf);
-        }
-    });
-}
-
 function fillCityTable(data, clickedUf) {
     const tableBody = document.getElementById('cityTableBody');
     if (!tableBody) return console.error('Elemento tbody da cidade não encontrado');
@@ -235,25 +332,6 @@ function fillCityTable(data, clickedUf) {
         `;
         tableBody.appendChild(tr);
     }
-}
-
-function setupCityTableClickHandler(data) {
-    const cityTableBody = document.getElementById('cityTableBody');
-    if (!cityTableBody) return console.error('Elemento tbody da Cidade não encontrado');
-
-    cityTableBody.addEventListener('click', function(e) {
-        if (e.target.tagName === 'TD') {
-            const clickedUf = e.target.parentElement.firstElementChild.textContent;
-            const clickedCity = e.target.parentElement.children[1].textContent;
-            // Ocultar tabela da Cidade
-            document.getElementById('citySection').style.display = 'none';
-            // Mostrar tabela da Escola
-            document.getElementById('schoolSection').style.display = 'block';
-            // Preencher tabela da Escola com dados da Cidade clicada
-            fillSchoolTable(data, clickedUf, clickedCity);
-            sortTableByPercentage('schoolTableBody');
-        }
-    });
 }
 
 function fillSchoolTable(data, clickedUf, clickedCity) {
@@ -296,86 +374,6 @@ function fillSchoolTable(data, clickedUf, clickedCity) {
     }
 }
 
-function showUfTable() {
-    // Mostrar tabela UF
-    document.getElementById('ufSection').style.display = 'block';
-    // Ocultar outras tabelas
-    document.getElementById('citySection').style.display = 'none';
-    document.getElementById('schoolSection').style.display = 'none';
-    // Atualizar breadcrumb
-    document.getElementById('separator-city').style.display = 'none';
-    document.getElementById('link-city').style.display = 'none';
-    document.getElementById('separator-school').style.display = 'none';
-    document.getElementById('link-school').style.display = 'none';
-}
-
-function showCityTable(clickedUf) {
-    // Mostrar tabela de cidades
-    document.getElementById('citySection').style.display = 'block';
-    // Ocultar outras tabelas
-    document.getElementById('ufSection').style.display = 'none';
-    document.getElementById('schoolSection').style.display = 'none';
-    // Atualizar breadcrumb
-    document.getElementById('separator-city').style.display = 'inline';
-    document.getElementById('link-city').style.display = 'inline';
-    document.getElementById('link-city').textContent = 'Relatório - ' + clickedUf;
-    document.getElementById('separator-school').style.display = 'none';
-    document.getElementById('link-school').style.display = 'none';
-}
-
-// Capturar o campo de pesquisa e adicionar um evento
-const searchInput = document.querySelector('input[type="search"]');
-searchInput.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    
-    // Verificar em cada tabela
-    filterTable('ufTableBody', searchTerm);
-    filterTable('cityTableBody', searchTerm);
-    filterTable('schoolTableBody', searchTerm);
-});
-
-// Função para filtrar tabelas
-function filterTable(tableId, term) {
-    const table = document.getElementById(tableId);
-    const rows = table.querySelectorAll('tr');
-
-    // Iterar sobre as linhas da tabela
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        let rowText = '';
-        
-        // Concatenar texto de todas as células
-        cells.forEach(cell => {
-            rowText += cell.textContent.toLowerCase();
-        });
-        
-        // Comparar texto da linha com termo de pesquisa
-        row.style.display = rowText.includes(term) ? '' : 'none';
-    });
-}
-
-function setupSchoolTableClickHandler(data) {
-    const schoolTableBody = document.getElementById('schoolTableBody');
-    if (!schoolTableBody) return console.error('Elemento tbody da Escola não encontrado');
-
-    schoolTableBody.addEventListener('click', function(e) {
-        if (e.target.tagName === 'TD') {
-            const clickedUf = e.target.parentElement.firstElementChild.textContent;
-            const clickedCity = e.target.parentElement.children[1].textContent;
-            const clickedSchool = e.target.parentElement.children[2].textContent;
-            // Ocultar tabela da Escola
-            document.getElementById('schoolSection').style.display = 'none';
-            // Mostrar tabela de Funções
-            document.getElementById('functionSection').style.display = 'block';
-            // Preencher tabela de Funções com dados da Escola clicada
-            fillFunctionTable(data, clickedUf, clickedCity, clickedSchool);
-            sortTableByPercentage('functionTableBody');
-
-        }
-    });
-}
-
-// Adicionar esta função para preencher a tabela de Funções
 function fillFunctionTable(data, clickedUf, clickedCity, clickedSchool) {
     const functionTableBody = document.getElementById('functionTableBody');
     if (!functionTableBody) return console.error('Elemento tbody das Funções não encontrado');
@@ -400,6 +398,13 @@ function fillFunctionTable(data, clickedUf, clickedCity, clickedSchool) {
         `;
         functionTableBody.appendChild(tr);
     }
+}
+
+// ------------------ UTILITÁRIOS ------------------
+
+function switchSection(hideSectionId, showSectionId) {
+    document.getElementById(hideSectionId).style.display = 'none';
+    document.getElementById(showSectionId).style.display = 'block';
 }
 
 function sortTableByPercentage(tbodyId) {
@@ -428,20 +433,47 @@ function sortTableByPercentage(tbodyId) {
     rows.forEach(row => tbody.appendChild(row));
 }
 
-document.querySelectorAll('.btn-back').forEach(button => {
-    button.addEventListener('click', function() {
-        const section = button.closest('.orders');
-        if (section.id === 'citySection') {
-            showUfTable();
-        } else if (section.id === 'schoolSection') {
-            // Aqui você pode decidir se quer mostrar a tabela da UF ou da Cidade.
-            // Por enquanto, estou mostrando a tabela da Cidade.
-            document.getElementById('citySection').style.display = 'block';
-            document.getElementById('schoolSection').style.display = 'none';
-        } else if (section.id === 'functionSection') {
-            // Modifique conforme sua necessidade.
-            document.getElementById('schoolSection').style.display = 'block';
-            document.getElementById('functionSection').style.display = 'none';
-        }
-    });
+// ------------------ FILTROS E NAVEGAÇÃO ------------------
+
+const searchInput = document.querySelector('input[type="search"]');
+searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    filterTable('ufTableBody', searchTerm);
+    filterTable('cityTableBody', searchTerm);
+    filterTable('schoolTableBody', searchTerm);
 });
+
+function filterTable(tableId, term) {
+    const table = document.getElementById(tableId);
+    const rows = table.querySelectorAll('tr');
+
+    // Iterar sobre as linhas da tabela
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        let rowText = '';
+        
+        // Concatenar texto de todas as células
+        cells.forEach(cell => {
+            rowText += cell.textContent.toLowerCase();
+        });
+        
+        // Comparar texto da linha com termo de pesquisa
+        row.style.display = rowText.includes(term) ? '' : 'none';
+    });
+}
+
+document.querySelectorAll('.btn-back').forEach(button => {
+    button.addEventListener('click', navigateBack);
+});
+
+function navigateBack() {
+    const section = this.closest('.orders');
+    if (section.id === 'citySection') {
+        switchSection('citySection', 'ufSection');
+    } else if (section.id === 'schoolSection') {
+        switchSection('schoolSection', 'citySection');
+    } else if (section.id === 'functionSection') {
+        switchSection('functionSection', 'schoolSection');
+    }
+}
+
