@@ -194,7 +194,6 @@ sideLinks.forEach(link => {
 document.addEventListener('DOMContentLoaded', function() {
     applySavedTheme();
     loadDataAndSetupHandlers();
-    loadAndDisplayData();
 });
 
 // ------------------ TEMAS ------------------
@@ -216,6 +215,7 @@ function loadDataAndSetupHandlers() {
     .then(response => response.json())
     .then(data => {
         updateInsights(data);
+        setupTables(data);
         setupBreadcrumbHandlers();
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
