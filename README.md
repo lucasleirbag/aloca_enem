@@ -4,7 +4,7 @@ O "Relatório de Alocação para o ENEM 2023" é um website intuitivo e de fáci
 
 ## Demonstração
 
-[Ver Demonstração](https://xpsarea51.github.io/Rela_aloca/)
+[Ver Demonstração](https://xpsarea51.github.io/alocacao/)
 
 ## Tecnologias Utilizadas
 

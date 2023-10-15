@@ -148,7 +148,7 @@ function handleContentLoaded() {
 
         document.getElementById('link-city').addEventListener('click', function(e) {
             e.preventDefault();
-            showCityTable();  // Faltou os parênteses aqui
+            showCityTable(); 
         });
     })
     .catch(error => console.error('Erro ao carregar os dados:', error));
@@ -175,11 +175,6 @@ function updateInsights(data) {
     document.getElementById("remainingQty").textContent = remainingQty.toLocaleString('pt-BR');
     document.getElementById("expectedQty").textContent = totalExpected.toLocaleString('pt-BR');
 }
-
-// Agora, atualize os event listeners para usar a função `handleContentLoaded`:
-
-document.removeEventListener('DOMContentLoaded', function() {});  // Remova o antigo event listener
-document.addEventListener('DOMContentLoaded', handleContentLoaded);  // Adicione o novo event listener
 
 // Event listeners
 
