@@ -253,8 +253,8 @@ function setupTableClickHandlers(data) {
 
     schoolTableBody.addEventListener('click', function(e) {
         if (e.target.tagName === 'TD') {
-            const clickedUf = e.target.parentElement.firstElementChild.textContent;
-            const clickedCity = e.target.parentElement.children[1].textContent;
+            const clickedUf = e.target.parentElement.dataset.uf;
+            const clickedCity = e.target.parentElement.dataset.city;
             const clickedSchool = e.target.parentElement.children[2].textContent;
             switchSection('schoolSection', 'functionSection');
             fillFunctionTable(data, clickedUf, clickedCity, clickedSchool);
@@ -355,6 +355,8 @@ function fillSchoolTable(data, clickedUf, clickedCity) {
         const remaining = totalExpected - totalAllocated;
 
         const tr = document.createElement('tr');
+        tr.dataset.uf = clickedUf;   // Armazenando UF
+        tr.dataset.city = clickedCity;   // Armazenando cidade
         tr.innerHTML = `
             
             <td>${nroCoordenacao}</td>
@@ -374,7 +376,28 @@ function fillFunctionTable(data, clickedUf, clickedCity, clickedSchool) {
     if (!functionTableBody) return console.error('Elemento tbody das Funções não encontrado');
 
     functionTableBody.innerHTML = ''; // Limpar tabela de Funções
+
+    if (!data[clickedUf]) {
+        console.error(`Dados para a UF '${clickedUf}' não encontrados!`);
+        return;
+    }
+    
+    if (!data[clickedUf][clickedCity]) {
+        console.error(`Dados para a cidade '${clickedCity}' na UF '${clickedUf}' não encontrados!`);
+        return;
+    }
+    
+    if (!data[clickedUf][clickedCity].details) {
+        console.error(`Detalhes para a cidade '${clickedCity}' na UF '${clickedUf}' não encontrados!`);
+        return;
+    }
+    
     const schoolData = data[clickedUf][clickedCity].details[clickedSchool];
+
+    if (!schoolData) {
+        console.error(`Dados para a escola '${clickedSchool}' na cidade '${clickedCity}' na UF '${clickedUf}' não encontrados!`);
+        return;
+    }
 
     for (let functionName in schoolData) {
         const functionDetails = schoolData[functionName];
