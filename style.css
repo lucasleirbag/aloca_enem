@@ -623,3 +623,40 @@ body{
     max-height: 40vh; /* ou o valor desejado */
     overflow-y: auto;
 }
+
+/* Adiciona estilo as legendas das tabelas */
+h3 a {
+    color: inherit;  /* Faz com que os links herdem a cor do texto do h3 */
+    text-decoration: none;  /* Remove o sublinhado dos links */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container thead th {
+    background-color: #181a1e; /* Ou qualquer cor de fundo que você deseja para o cabeçalho */
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Isso garante que o cabeçalho esteja acima do conteúdo da tabela */
+}
+
+/* Cor das porcentagens da tabela */
+.percentage-red {
+    color: #d32f2f;  /* Um vermelho mais escuro e saturado */
+}
+
+.percentage-orange {
+    color: #f57c00;  /* Um laranja mais escuro e saturado */
+}
+
+.percentage-blue {
+    color: #1976d2;  /* Um azul mais escuro e saturado */
+}
+
+.percentage-green {
+    color: #388e3c;  /* Um verde mais escuro e saturado */
+}
+
+

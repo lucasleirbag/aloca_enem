@@ -305,9 +305,11 @@ function fillUfTable(data) {
         `;
         tableBody.appendChild(tr);
     });
+    applyPercentageColor('ufTableBody');
 }
 
 function fillCityTable(data, clickedUf) {
+    document.querySelector("#citySection h3").innerHTML = `Atualização de alocação - <a href="#" data-section="ufSection">${clickedUf}</a>`;
     const tableBody = document.getElementById('cityTableBody');
     if (!tableBody) return console.error('Elemento tbody da cidade não encontrado');
 
@@ -327,9 +329,12 @@ function fillCityTable(data, clickedUf) {
         `;
         tableBody.appendChild(tr);
     }
+    sortTableByPercentage('cityTableBody');
+    applyPercentageColor('cityTableBody');
 }
 
 function fillSchoolTable(data, clickedUf, clickedCity) {
+    document.querySelector("#schoolSection h3").innerHTML = `Atualização de alocação - <a href="#" data-section="ufSection">${clickedUf}</a> - <a href="#" data-section="citySection">${clickedCity}</a>`;
     const tableBody = document.getElementById('schoolTableBody');
     if (!tableBody) return console.error('Elemento tbody da Escola não encontrado');
 
@@ -369,9 +374,12 @@ function fillSchoolTable(data, clickedUf, clickedCity) {
         `;
         tableBody.appendChild(tr);
     }
+    sortTableByPercentage('schoolTableBody');
+    applyPercentageColor('schoolTableBody');
 }
 
 function fillFunctionTable(data, clickedUf, clickedCity, clickedSchool) {
+    document.querySelector("#functionSection h3").innerHTML = `Atualização de alocação - <a href="#" data-section="ufSection">${clickedUf}</a> - <a href="#" data-section="citySection">${clickedCity}</a> - ${clickedSchool}`;
     const functionTableBody = document.getElementById('functionTableBody');
     if (!functionTableBody) return console.error('Elemento tbody das Funções não encontrado');
 
@@ -416,6 +424,8 @@ function fillFunctionTable(data, clickedUf, clickedCity, clickedSchool) {
         `;
         functionTableBody.appendChild(tr);
     }
+    sortTableByPercentage('functionTableBody');
+    applyPercentageColor('functionTableBody');
 }
 
 // ------------------ UTILITÁRIOS ------------------
@@ -493,5 +503,40 @@ function navigateBack() {
     } else if (section.id === 'functionSection') {
         switchSection('functionSection', 'schoolSection');
     }
+}
+
+function applyPercentageColor(tableId) {
+    const table = document.getElementById(tableId);
+    const rows = table.querySelectorAll('tr');
+
+    let percentageCellIndex = 1; // Por padrão, é a segunda coluna
+
+    switch(tableId) {
+        case 'cityTableBody':
+            percentageCellIndex = 2; // Terceira coluna
+            break;
+        case 'schoolTableBody':
+            percentageCellIndex = 3; // Quarta coluna
+            break;
+        case 'functionTableBody':
+            percentageCellIndex = 1; // Segunda coluna (padrão)
+            break;
+    }
+
+    rows.forEach(row => {
+        const percentageCell = row.querySelector(`td:nth-child(${percentageCellIndex + 1})`);
+        if (percentageCell) {
+            const value = parseFloat(percentageCell.textContent);
+            if (value >= 0 && value <= 40.99) {
+                percentageCell.classList.add('percentage-red');
+            } else if (value >= 41 && value <= 60.99) {
+                percentageCell.classList.add('percentage-orange');
+            } else if (value >= 61 && value <= 80.99) {
+                percentageCell.classList.add('percentage-blue');
+            } else if (value >= 81 && value <= 100) {
+                percentageCell.classList.add('percentage-green');
+            }
+        }
+    });
 }
 
