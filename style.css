@@ -618,3 +618,8 @@ body{
 .btn-back i {
     color: #ffff;
 }
+
+.table-container {
+    max-height: 40vh; /* ou o valor desejado */
+    overflow-y: auto;
+}

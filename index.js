@@ -118,7 +118,6 @@ function handleContentLoaded() {
     fetch('dados.json')
     .then(response => response.json())
     .then(data => {
-        fillUfTable(data);
         sortTableByPercentage('ufTableBody');
 
         const ufTableBody = document.getElementById('ufTableBody');
@@ -278,6 +277,7 @@ function setupBreadcrumbHandlers() {
 // ------------------ FUNÇÕES DE PREENCHIMENTO DE TABELAS ------------------
 
 function fillUfTable(data) {
+    console.log("fillUFTable foi chamada");
     const tableBody = document.getElementById('ufTableBody');
     if (!tableBody) return console.error('Elemento tbody não encontrado');
 
