@@ -533,7 +533,7 @@ function applyPercentageColor(tableId) {
                 percentageCell.classList.add('percentage-orange');
             } else if (value >= 61 && value <= 80.99) {
                 percentageCell.classList.add('percentage-blue');
-            } else if (value >= 81 && value <= 100) {
+            } else if (value >= 81 && value <= 200) {
                 percentageCell.classList.add('percentage-green');
             }
         }
