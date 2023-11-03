@@ -540,3 +540,45 @@ function applyPercentageColor(tableId) {
     });
 }
 
+// Esta função será chamada quando o botão "Cidade" for clicado.
+function showCityTableOnly() {
+    // Ocultar a seção de insights
+    const insightsSection = document.querySelector('.insights');
+    insightsSection.style.display = 'none';
+
+    // Expandir a tabela para ocupar o espaço da seção de insights
+    const tableContainer = document.querySelector('.table-container');
+    tableContainer.classList.add('expanded-table');
+
+    // Carregar e exibir as cidades
+    fetch('cidades.json') // Supondo que o arquivo com as cidades se chame 'cidades.json'
+        .then(response => response.json())
+        .then(cidades => {
+            const cityTableBody = document.getElementById('cityTableBody');
+            cityTableBody.innerHTML = ''; // Limpar a tabela existente
+            cidades.forEach(cidade => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${cidade.nome}</td>`; // Supondo que o objeto da cidade tenha uma propriedade 'nome'
+                // Adicione mais células conforme necessário
+                cityTableBody.appendChild(tr);
+            });
+        })
+        .catch(error => console.error('Erro ao carregar as cidades:', error));
+}
+
+// Adicionar o evento de clique ao botão "Cidade"
+document.getElementById('menu-city').addEventListener('click', showCityTableOnly);
+
+function showGeneralLayout() {
+    // Mostrar a seção de insights novamente
+    const insightsSection = document.querySelector('.insights');
+    insightsSection.style.display = 'flex'; // Ou o display original
+
+    // Restaurar o tamanho original da tabela
+    const tableContainer = document.querySelector('.table-container');
+    tableContainer.classList.remove('expanded-table');
+
+    // ... Você pode adicionar aqui mais lógica para restaurar outras partes do layout se necessário ...
+}
+
+document.getElementById('menu-general').addEventListener('click', showGeneralLayout);

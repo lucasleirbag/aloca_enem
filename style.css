@@ -661,4 +661,9 @@ table {
     color: #55f35d;  /* Um verde mais escuro e saturado */
 }
 
-
+/* Classe para expandir a tabela */
+.expanded-table {
+  min-height: 60vh; /* Mínimo de altura da janela de visualização */
+  display: block; /* Exibição em bloco para ocupar o espaço disponível */
+  overflow-y: auto;
+}

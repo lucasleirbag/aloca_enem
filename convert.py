@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import json
 import numpy as np
+import sys
 from tqdm import tqdm
 import subprocess
 import uuid
@@ -18,44 +19,50 @@ def process_excel_files(folder_path):
     
     start_time = datetime.now()
     
-    for filename in tqdm(files, desc="Processando arquivos"):
+    # Definindo as colunas necessárias para evitar a leitura de dados desnecessários
+    columns_to_read = ['DiaTurno', 'UF', 'Cidade', 'Local', 'Funcao', 'Alocados', 'Previstos', 'NroCoordenacao', 'LocalProvaID']
+    
+    for filename in tqdm(files, desc="Processando arquivos", file=sys.stdout):
         file_path = os.path.join(folder_path, filename)
         try:
-            df = pd.read_excel(file_path)
+            # Ler apenas as colunas necessárias
+            df = pd.read_excel(file_path, usecols=columns_to_read)
             
             if df.empty:
                 print(f"\nO arquivo {filename} está vazio e será ignorado.")
                 continue
 
+            # Filtrando dados diretamente ao ler o arquivo
             df = df[df['DiaTurno'] == '05/11/2023 - Tarde']
             grouped = df.groupby(['UF', 'Cidade', 'Local', 'Funcao'])
 
             for (uf, city, location, function), group in grouped:
+                # Simplifique o acesso a valores com métodos de pandas
                 total_allocated = group['Alocados'].sum()
                 total_expected = group['Previstos'].sum()
 
-                nro_coordenacao = group['NroCoordenacao'].iloc[0]
-                local_prova_id = group['LocalProvaID'].iloc[0]
+                # Isole o acesso ao primeiro item para otimizar o desempenho
+                first_item = group.iloc[0]
+                nro_coordenacao = first_item['NroCoordenacao']
+                local_prova_id = first_item['LocalProvaID']
 
-                if uf not in consolidated_data:
-                    consolidated_data[uf] = {}
-                if city not in consolidated_data[uf]:
-                    consolidated_data[uf][city] = {'total_allocated': 0, 'total_expected': 0, 'details': {}}
-
-                if location not in consolidated_data[uf][city]["details"]:
-                    consolidated_data[uf][city]["details"][location] = {}
-
-                consolidated_data[uf][city]["details"][location][function] = {
+                # Utilize o método setdefault para reduzir verificações e atribuições
+                uf_data = consolidated_data.setdefault(uf, {})
+                city_data = uf_data.setdefault(city, {'total_allocated': 0, 'total_expected': 0, 'details': {}})
+                location_details = city_data["details"].setdefault(location, {})
+                
+                location_details[function] = {
                     "allocated": total_allocated,
                     "expected": total_expected,
                     'nro_coordenacao': nro_coordenacao,
                     'local_prova_id': local_prova_id
                 }
 
-                consolidated_data[uf][city]["total_allocated"] += total_allocated
-                consolidated_data[uf][city]["total_expected"] += total_expected
+                city_data["total_allocated"] += total_allocated
+                city_data["total_expected"] += total_expected
             
             processed_files_count += 1
+            # Remova o arquivo somente após o sucesso do processamento
             os.remove(file_path)
 
         except Exception as e:
@@ -78,7 +85,7 @@ def push_to_github():
         print(f"\nErro ao fazer push para o GitHub: {e.output.decode('utf-8')}")
 
 def main():
-    folder_path = "/Users/lucasgabriel/Documents/Base_planilha"
+    folder_path = "C:/Users/lucas.ribeiro/Base_planilha_alocacao"
     if not os.path.exists(folder_path):
         print("Caminho não encontrado!")
         return
