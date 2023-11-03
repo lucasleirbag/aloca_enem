@@ -644,12 +644,6 @@ table {
     z-index: 10;
 }
 
-/* Estilos para o cabeçalho da tabela no tema escuro */
-/* body.dark .table-container thead th {
-    background-color: var(--dark); /* Utiliza a variável --dark para o fundo escuro */
-    color: var(--light);
-} */
-
 /* Cor das porcentagens da tabela */
 .percentage-red {
     color: #d32f2f;  /* Um vermelho mais escuro e saturado */
