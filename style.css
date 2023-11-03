@@ -635,12 +635,20 @@ table {
     border-collapse: collapse;
 }
 
+/* Cabeçalho da tabela */
 .table-container thead th {
-    background-color: #181a1e; /* Ou qualquer cor de fundo que você deseja para o cabeçalho */
+    background-color: var(--light); /* Cor de fundo claro */
+    color: var(--dark); /* Cor do texto escuro */
     position: sticky;
     top: 0;
-    z-index: 10; /* Isso garante que o cabeçalho esteja acima do conteúdo da tabela */
+    z-index: 10;
 }
+
+/* Estilos para o cabeçalho da tabela no tema escuro */
+/* body.dark .table-container thead th {
+    background-color: var(--dark); /* Utiliza a variável --dark para o fundo escuro */
+    color: var(--light);
+} */
 
 /* Cor das porcentagens da tabela */
 .percentage-red {
